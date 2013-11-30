@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv = "Content-Type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="css/codemirror/codemirror.css">
+	<link rel="stylesheet" href="css/codemirror/foldgutter.css" />
+	<link rel="stylesheet" href="css/codemirror/show-hint.css" />
+	<link href="css/main.css" rel="stylesheet" media="all"></link>
+	<link rel="stylesheet" href="css/codemirror/fullscreen.css">
+	<link rel="stylesheet" href="css/codemirror/eclipse.css">
+	<link rel="stylesheet" href="css/ui/jquery.ui.all.css">
+
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/jquery-ui-1.10.1.custom.js"></script>
+	<script src="js/ui/jquery.ui.widget.js"></script>
+	<script src="js/ui/jquery.ui.button.js"></script>
+	<script src="js/ui/jquery.ui.dialog.js"></script>
+	<script src="js/ui/jquery.ui.effect.js"></script>
+	<script src="js/ui/jquery.ui.effect-blind.js"></script>
+	<script src="js/ui/jquery.ui.effect-explode.js"></script>
+
+	<script src="js/codemirror/codemirror.js"></script>
+	<script src="js/codemirror/clike.js"></script>
+	<script src="js/codemirror/matchbrackets.js"></script>
+	<script src="js/codemirror/closebrackets.js"></script>
+	<script src="js/codemirror/show-hint.js"></script>
+	<script src="js/codemirror/stm8-hint.js"></script>
+	<script src="js/codemirror/fullscreen.js"></script>
+	<script src="js/codemirror/foldcode.js"></script>
+	<script src="js/codemirror/foldgutter.js"></script>
+	<script src="js/codemirror/brace-fold.js"></script>
+	<script src="js/codemirror/comment-fold.js"></script>
+
+	<script src="js/front.js"></script>
+	<script src="js/flasher.js"></script>
+	
+</head>
+
+<body background="img/back.png">
+    
+	<div id="header" >
+		<div >
+			<image id="logo" src="img/stm8s.png"></image>
+		</div>
+		<div id="title">
+			<h1><font color="Blue">STM8 Launcher</font></h1>
+			<p>see stm8 run!</p>
+		</div>
+		<button id="info">应用简介</button>
+		<div id="appInfo" title="STM8 Launcher 简介">
+			<p>STM8 Launcher, stm8s小容量产品简易在线IDE, 配合精致的0.5K bootloader, 在chrome上即可创作你的mcu轻应用!</p>
+			<p>新手使用教程请猛击-> <a href="http://www.uclink.org/?p=26" target="_blank">STM8 Launcher 帮助</a></p>
+			<p>围观bootloader轻戳-> <a href="https://github.com/Zepan/hairBoot.git" target="_blank">hairBoot</a></p>
+			<p>吐槽bug, 意见建议, -> <a href="http://www.uclink.org"  target="_blank" >www.uclink.org</a></br>
+            围观更多作品, 请移步</p>           
+		</div>
+	</div>
+	<div class="container">
+    <div id="webCoder" >
+        <div id="codetoolbar" class="toolbar ui-widget-header">
+              <button id="loadSrc">打开代码</button> 
+              <button id="saveSrc">保存代码</button>
+              <button id="build">编译</button>
+              <button id="download" disabled="disabled">下载并烧写</button>
+              <button id="saveBin" >镜像保存至本地</button>
+              <input type="text" id="binFile_path" size="8" readonly>
+        </div>
+
+        <div id="codeContainer">
+            <textarea id="code">
+#include "app.h"
+/****************  宏定义  ****************/
+
+/**************** 函数声明 ****************/
+
+/**************** 全局变量 ****************/
+
+/****************** 函数 ******************/
+int main(void)
+{
+    while(1)
+    {
+    };
+}
+
+/**************** 中断句柄 ****************/
+
+            </textarea>
+        </div>
+        <hr id="codeLine" class="line"></hr>
+		<textarea id="buildInfo" readonly></textarea>
+    </div>
+  
+    <div id="terminal">
+        <div id="terminaltoolbar" >
+            <button id="refresh">刷新串口</button>
+            <select id="portPath" class="form-control"></select>
+            <button id="setP">打开串口</button>
+            <input type="text" id="rfile_path" size="5" readonly>
+            <button id="readFile" >打开镜像</button>
+            <button id="downloadF" disabled="disabled">烧写</button>
+            <input  type="checkbox" id="restart" checked="checked"><label for="restart">烧录完成后自启动</label></input>
+            <button id="clearRec" >清空接收区</button>
+        </div>
+		<textarea id="output" readonly></textarea>
+		<div id="usrArea">
+			<textarea id="input" ></textarea>
+			<div id="usrButtons">
+				<button id="send" disabled="disabled" >发送</button><br/>
+				<input  type="checkbox" id="recHex" class="hexButton" ><label for="recHex">Hex收</label></input><br/>
+				<input  type="checkbox" id="sendHex" class="hexButton"><label for="sendHex">Hex发</label></input>
+			</div>
+		</div>
+	</div>
+    </div>
+</body>
+</html>

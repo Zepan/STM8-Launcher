@@ -1,0 +1,19 @@
+{
+	"name": "STM8 Launcher",
+	"description": "A simple IDE for STM8S with hairBoot",
+	"manifest_version": 2,
+	"version": "0.1.1",
+	"permissions": [
+		"serial",
+		{"fileSystem": ["write", "retainEntries", "directory"]} ,
+		"storage",
+		"http://*.uclink.org/",
+		"http://127.0.0.1/"
+	],
+	"app": {
+		"background": {
+			"scripts": ["js/background.js"]
+		}
+	},
+	"icons": {"128": "img/logo.png" }
+}
