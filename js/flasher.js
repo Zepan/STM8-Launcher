@@ -205,6 +205,13 @@ $(document).ready(function(){
 	
 });
 
+chrome.runtime.onSuspend.addListener(function() { 
+    if(portState == 1)  //退出前关闭打开的串口
+    {
+        chrome.serial.close(connectionInfo.connectionId, onClose);
+    }
+})
+
 function SerialPortList(ports) {
 	refresh(ports);
 	document.getElementById("refresh").onclick = function(){chrome.serial.getPorts(refresh);};
