@@ -357,7 +357,16 @@ function readFile()
 		rfile = readableEntry;
 		if (rfile.isFile) {
 			chrome.fileSystem.getDisplayPath(rfile, function(path) {
-				document.querySelector('#rfile_path').value = path;
+                var point = path.lastIndexOf(".");  
+                var type = path.substr(point);  
+                if(type!=".bin"&&type!=".hex"&&type!=".BIN"&&type!=".HEX"){  
+                    document.querySelector('#rfile_path').value = "后缀名无效(仅支持bin/hex)";
+                    rfile = 0;
+                }  
+                else
+                {
+                    document.querySelector('#rfile_path').value = path;
+                }
 			});
 		}
 	});
@@ -818,14 +827,51 @@ function downloadF()
 function clickDownloadF()
 {
 	if (rfile.isFile) {
-		readAsBin(rfile, function(result) {
-			binBuf = result;
-			u8BinBuf = new Uint8Array(binBuf);
-			WPAGE_CNT = ((u8BinBuf.byteLength)>>6) + 1; //TODO:6换成常量定义
-            state = S_UNCONNECT; 
-            dfFlag = 0; 
-            downloadF();
-		});
+        chrome.fileSystem.getDisplayPath(rfile, function(path) {
+            var point = path.lastIndexOf(".");  
+            var type = path.substr(point);  
+            if(type==".bin"||type==".BIN"){  
+                readAsBin(rfile, function(result) {
+                    binBuf = result;
+                    u8BinBuf = new Uint8Array(binBuf);
+                    WPAGE_CNT = ((u8BinBuf.byteLength)>>6) + 1; //TODO:6换成常量定义
+                    state = S_UNCONNECT; 
+                    dfFlag = 0; 
+                    downloadF();
+                });
+            }
+            else    //hex
+            {
+                u8BinBuf = new Uint8Array(binBuf);
+                var index = 0;
+                readAsText(rfile, function(result) {
+                    var txt = result.split('\n');
+                    for(var i=0; i < txt.length; i++)
+                    {
+                        if(txt[i].substr(7,2) == "00")  //index:7,type,00data,01end
+                        {
+                            for(var j=9; j < txt[i].length - 3; j += 2) 
+                            {
+                                u8BinBuf[index++] = parseInt(txt[i].substr(j,2),16);
+                                //console.log(parseInt(txt[i].substr(j,2),16) + ";");
+                            }
+                        }
+                        else if(txt[i].substr(7,2) == "01")
+                        {
+                            //console.log("end at "+i);
+                            break;
+                        }
+                        //else ignore yet
+                    }
+                    WPAGE_CNT = ((u8BinBuf.byteLength)>>6) + 1; //TODO:6换成常量定义
+                    state = S_UNCONNECT; 
+                    dfFlag = 0; 
+                    downloadF();
+                    //binBuf = result;
+                    //u8BinBuf = new Uint8Array(binBuf);
+                });
+            }
+        });
 	}
 	else
 	{
@@ -877,7 +923,8 @@ function onOpen(cinfo){
 		$("#refresh").button("disable");
 		document.getElementById("portPath").disabled = true;
         $("#output").append("打开成功!\n"); 
-        chrome.serial.read(connectionInfo.connectionId, 128, onRead);         
+        chrome.serial.read(connectionInfo.connectionId, 4096, onRead);  
+//chrome.serial.onReceive.addListener(onRead);        
     }
 }
 
@@ -982,7 +1029,7 @@ function onRead(readInfo){
 			$("#output").append(ab2str(bufView)); 
 		}
     }
-	chrome.serial.read(connectionInfo.connectionId, 128, onRead); 
+	chrome.serial.read(connectionInfo.connectionId, 4096, onRead); 
 };
   
 function onWrite(writeInfo){
